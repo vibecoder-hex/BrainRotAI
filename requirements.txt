@@ -1,0 +1,6 @@
+fastapi[standard]
+passlib
+pyjwt
+aiohttp
+asyncio
+python-decouple
