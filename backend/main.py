@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext
-from typing import Annotated
+from typing import Annotated, List
 
 import jwt, decouple
 from datetime import datetime, timedelta, timezone
@@ -49,6 +49,7 @@ def get_password_hash(password: str):
 # Модель промпта
 class PromptRequest(BaseModel): 
     prompt: str
+    image_ratio: List[str]
 
 
 # Абстрактная модель пользователя
@@ -134,7 +135,7 @@ async def root():
 # Endpoint для генерации изображения через YandexArtAPI
 @app.post("/generate/")
 async def generate_image(request: PromptRequest, current_user: Annotated[User, Depends(get_current_active_user)]):
-    image_code = await generate(text=request.prompt)
+    image_code = await generate(text=request.prompt, image_ratio = request.image_ratio)
     return {"result": image_code}
 
 @app.post("/token/")

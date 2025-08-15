@@ -17,8 +17,13 @@ let form_for_login = document.getElementById("login_form")
                         body: formdata
                     });
                     if (!response.ok) {
-                        if (response.status === 401) {
-                            throw new Error("Incorrect username/password")
+                        switch (response.status) {
+                            case 401:
+                                throw new Error("Incorrect username/pasword");
+                            case 500:
+                                throw new Error("Internal server error")
+                            default:
+                                throw new Error(`Error with code: ${response.status}`)
                         }
                     }
                     let token_response = await response.json()

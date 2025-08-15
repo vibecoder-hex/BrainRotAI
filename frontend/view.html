@@ -9,6 +9,11 @@
         <h3>Generate image from prompt</h3>
         <form id="prompt_form" method="post">
             Prompt: <input type="text" id="prompt_input">
+            <select id="image_ratio">
+                <option value="1:1">1:1</option>
+                <option value="4:3" selected>4:3</option>
+                <option value="16:9">16:9</option>
+            </select>
             <br><br>
             <button type="submit" id="submit_btn">Generate</button>
         </form>
