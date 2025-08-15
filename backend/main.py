@@ -133,7 +133,7 @@ async def root():
 
 # Endpoint для генерации изображения через YandexArtAPI
 @app.post("/generate/")
-async def generate_image(request: PromptRequest):
+async def generate_image(request: PromptRequest, current_user: Annotated[User, Depends(get_current_active_user)]):
     image_code = await generate(text=request.prompt)
     return {"result": image_code}
 

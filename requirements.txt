@@ -4,3 +4,4 @@ pyjwt
 aiohttp
 asyncio
 python-decouple
+bcrypt

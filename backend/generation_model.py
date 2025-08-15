@@ -12,8 +12,8 @@ class YandexArtAPI:
                     "modelUri": "art://b1glcms1jv2gp6q57vlh/yandex-art/latest",
                     "generationOptions": {
                     "aspectRatio": {
-                        "widthRatio": "1",
-                        "heightRatio": "2"
+                        "widthRatio": "4",
+                        "heightRatio": "3"
                     }
                     },
                     "messages": [
