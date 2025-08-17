@@ -36,7 +36,7 @@ const button_change = function(btn, state) {
                     body: JSON.stringify({"prompt": prompt_text, "image_ratio": image_ratio.split(":")}),
                 });
                 if (!response.ok) {
-                    throw new Error(response.status)
+                    throw {"status": response.status}
                 }
                 const response_result = await response.json()
                 document.getElementById("result_image").innerHTML = `
