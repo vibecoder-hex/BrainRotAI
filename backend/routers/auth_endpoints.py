@@ -11,8 +11,8 @@ router = APIRouter()
 
 
 @router.post("/token/")
-async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):    # Endpoint логина: прием данных от клиента
-    user = authenticate_user(fake_users_db, form_data.username, form_data.password)
+async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: SessionDep):    # Endpoint логина: прием данных от клиента
+    user = authenticate_user(UserBase, form_data.username, form_data.password, session)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,                            # Аутентификация и генерация токена с заданным временем истечения

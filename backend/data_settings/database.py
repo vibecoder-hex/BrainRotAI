@@ -1,18 +1,17 @@
-from backend.main import *
-from backend.data_settings.series import *
+from sqlmodel import Field, SQLModel
+from ..vars import engine
 
-fake_users_db = {
-    "goyda": {
-        "username": "goyda",
-        "full_name": "Goyda",
-        "email": "goyda@mail.ru",
-        "hashed_password": "$2b$12$xNmI4yXJdgcktYt/L/znJ.SxoZ2fdW4HruHcK90hW8D2VtgTts5QO",
-        "disabled": False
-    }
-}
 
-# Функция запроса в базу данных для получения пользователя
-def get_user(db, username: str):  
-    if username in db:
-        user_dict = db[username]
-        return UserInDB(**user_dict)
+class UserBase(SQLModel, table=True):
+    id: int | None = Field(default = None, primary_key = True)
+    username: str = Field(index = True)
+    full_name: str = Field(index = True)
+    email: str = Field(index = True)
+    hashed_password: str = Field(index = True)
+    disabled: bool = Field(index=True, default=False)
+
+
+def create_db_and_tables():
+    SQLModel.metadata.create_all(engine)
+
+    

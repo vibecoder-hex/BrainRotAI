@@ -1,4 +1,4 @@
-from backend.generation_model.yandex_art_api import generate
+from generation_model.yandex_art_api import generate
 from fastapi import APIRouter
 from typing import Annotated
 
@@ -14,6 +14,6 @@ async def root():
 
 # Endpoint для генерации изображения через YandexArtAPI
 @router.post("/generate/")
-async def generate_image(request: PromptRequest, current_user: Annotated[User, Depends(get_current_active_user)]):
+async def generate_image(request: PromptRequest, current_user: Annotated[UserBase, Depends(get_current_active_user)]):
     image_code = await generate(text=request.prompt, image_ratio = request.image_ratio)
     return {"result": image_code}
