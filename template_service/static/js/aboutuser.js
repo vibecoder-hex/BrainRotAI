@@ -1,8 +1,8 @@
 const getUserData = async () => {
     const token = localStorage.getItem("token")
-    try {
-        const response = await fetch('http://127.0.0.1:8000/api/about_user', {
+        const response = await fetch('http://127.0.0.1:8001/api/about_user', {
             method: "GET",
+            credentials: 'include',
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -16,17 +16,6 @@ const getUserData = async () => {
             userdata_list.append(li_elem)
         }
         document.body.append(userdata_list)
-
-        if (!response.ok) {
-            throw {"status": response.status}
-        }
-    }
-    catch (error) {
-        if (error.status === 401) {
-            window.location.href = "login/"
-        }
-    }
-
 }
 
 getUserData();

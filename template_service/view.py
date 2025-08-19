@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Для разработки, в production укажите конкретные домены
+    allow_origins=["http://127.0.0.1:8003", "http://localhost:8003", "http://127.0.0.1:8001"],  # Для разработки, в production укажите конкретные домены
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -9,7 +9,7 @@ from .data_settings.database import create_db_and_tables
 app = FastAPI()
 
 app.add_middleware(CORSMiddleware,
-                   allow_origins=['*'],
+                   allow_origins=["http://127.0.0.1:8001", "http://localhost:8003", "http://127.0.0.1:8003"],
                    allow_credentials=True,
                     allow_methods=["*"],
                     allow_headers=["*"]

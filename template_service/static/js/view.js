@@ -29,6 +29,7 @@ const button_change = function(btn, state) {
             try {
                 const response = await fetch(`http://127.0.0.1:8001/api/generate/`, {
                     method: 'POST',
+                    credentials: 'include',
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`
@@ -58,3 +59,12 @@ const button_change = function(btn, state) {
         const clear_result = function() {
             document.getElementById("result_image").innerHTML = "";
         }
+
+
+const logout = async () => {
+    await fetch("http://127.0.0.1:8001/api/logout/", {
+        method: "POST",
+        credentials: 'include',
+    })
+    window.location.href = "login/"
+}

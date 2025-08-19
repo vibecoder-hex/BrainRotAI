@@ -1,5 +1,5 @@
 from datetime import datetime, timezone, timedelta
-from fastapi import Depends, status
+from fastapi import Depends, status, Request
 from fastapi.exceptions import HTTPException
 from typing import Annotated
 from jwt.exceptions import InvalidTokenError
@@ -27,6 +27,18 @@ def authenticate_user(db, username: str, password: str, session: SessionDep):
         return False
     return user
 
+def get_token_from_cookie(request: Request):
+    print(f"All cookies received: {dict(request.cookies)}")
+    print(f"All headers: {dict(request.headers)}")
+    token = request.cookies.get("access_token")
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not token found"
+        )
+    print(token)
+    return token
+
 # Генерация JWT-токена c довалением срока действия
 def create_access_token(data: dict, expires_delta: timedelta | None = None):  
     to_encode = data.copy()
@@ -39,7 +51,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 # Расшифровка JWT-токена и получение user-данных из бд для верификации токена от подделки
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], session: SessionDep):
+async def get_current_user(token: Annotated[str, Depends(get_token_from_cookie)], session: SessionDep):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail = "Could not validate credentials",

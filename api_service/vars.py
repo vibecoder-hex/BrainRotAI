@@ -1,6 +1,6 @@
 import decouple
 from passlib.context import CryptContext
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import OAuth2PasswordBearer, APIKeyCookie
 from sqlmodel import create_engine
 
 # JWT константы
@@ -12,7 +12,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated="auto")
 
 # Обработчик JWT токена из запроса
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/token/")
 
 # Параметры базы данных sqlite
 sqlite_file_name = "database.db"

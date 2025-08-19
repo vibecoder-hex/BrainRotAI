@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Response
 from typing import Annotated
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
@@ -11,7 +11,7 @@ router = APIRouter()
 
 
 @router.post("/api/token/")
-async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: SessionDep):    # Endpoint логина: прием данных от клиента
+async def login(response: Response, form_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: SessionDep):    # Endpoint логина: прием данных от клиента
     user = authenticate_user(UserBase, form_data.username, form_data.password, session)
     if not user:
         raise HTTPException(
@@ -21,4 +21,16 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], sess
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(data={"sub": user.username}, expires_delta=access_token_expires)
-    return Token(access_token=access_token, token_type="bearer")
+    response.set_cookie(
+            key="access_token",
+            value=access_token,
+            httponly=True,
+            max_age=30 * 60,  
+        )
+    return {"message": "Login successfull"}
+
+
+@router.post('/api/logout/')
+async def logout(response: Response):
+    response.delete_cookie("access_token")
+    return {"message": "logout successfull"}

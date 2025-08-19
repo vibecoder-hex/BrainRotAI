@@ -11,6 +11,7 @@ let form_for_login = document.getElementById("login_form")
                 try {
                     let response = await fetch("http://127.0.0.1:8001/api/token/", {
                         method: "POST",
+                        credentials: 'include',
                         headers: {
                             "Content-Type": "application/x-www-form-urlencoded"
                         },
