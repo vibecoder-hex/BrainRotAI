@@ -9,7 +9,7 @@ let form_for_login = document.getElementById("login_form")
                 formdata.append('username', login);
                 formdata.append('password', password);
                 try {
-                    let response = await fetch("http://127.0.0.1:8000/token/", {
+                    let response = await fetch("http://127.0.0.1:8001/api/token/", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/x-www-form-urlencoded"
@@ -28,7 +28,7 @@ let form_for_login = document.getElementById("login_form")
                     }
                     let token_response = await response.json()
                     localStorage.setItem("token", token_response.access_token)
-                    window.location.href = 'view.html'
+                    window.location.href = '/'
                 }
                 catch (error) {
                     document.getElementById("status_div").innerHTML = `

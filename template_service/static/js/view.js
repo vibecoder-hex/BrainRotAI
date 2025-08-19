@@ -27,7 +27,7 @@ const button_change = function(btn, state) {
             const image_ratio = document.getElementById("image_ratio").value;
 
             try {
-                const response = await fetch(`http://127.0.0.1:8000/generate/`, {
+                const response = await fetch(`http://127.0.0.1:8001/api/generate/`, {
                     method: 'POST',
                     headers: {
                         "Content-Type": "application/json",
@@ -47,7 +47,7 @@ const button_change = function(btn, state) {
             }
             catch (error) {
                 if (error.status === 401) {
-                    window.location.href = 'login.html'
+                    window.location.href = 'login/'
                 }   
             }
             finally {

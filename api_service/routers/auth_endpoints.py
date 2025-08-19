@@ -3,14 +3,14 @@ from typing import Annotated
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
-from backend.data_settings.database import *
-from backend.auth_settings.jwt_auth import *
+from api_service.data_settings.database import *
+from api_service.auth_settings.jwt_auth import *
 from ..vars import ACCESS_TOKEN_EXPIRE_MINUTES
 
 router = APIRouter()
 
 
-@router.post("/token/")
+@router.post("/api/token/")
 async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: SessionDep):    # Endpoint логина: прием данных от клиента
     user = authenticate_user(UserBase, form_data.username, form_data.password, session)
     if not user:

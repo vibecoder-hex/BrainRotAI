@@ -5,9 +5,9 @@ from typing import Annotated
 from jwt.exceptions import InvalidTokenError
 
 import jwt
-from backend.data_settings.database import *
-from backend.data_settings.series import *
-from backend.data_settings.db_session import *
+from api_service.data_settings.database import *
+from api_service.data_settings.series import *
+from api_service.data_settings.db_session import *
 from ..vars import *
 
 # Верификация пароля с его хешем

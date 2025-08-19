@@ -3,10 +3,11 @@
 <html>
     <head>
         <title>BrainRotAI</title>
+        
     </head>
     <body>
         <h1>BrainRotAI</h1>
-        <a href="about_user.html">About User</a><br>
+        <a href="/about_user/">About User</a><br>
         <h3>Generate image from prompt</h3>
         <form id="prompt_form" method="post">
             Prompt: <input type="text" id="prompt_input">
@@ -20,6 +21,7 @@
         </form>
         <br>
         <div id="result_image"></div>
+        
     </body>
-    <script src="static/js/view.js"></script>
+    <script src="{{url_for('static', path='/js/view.js')}}"></script>
 </html>

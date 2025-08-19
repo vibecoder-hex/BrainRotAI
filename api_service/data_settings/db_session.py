@@ -3,7 +3,7 @@ from fastapi import Depends
 from sqlmodel import Session, select
 from ..vars import engine
 
-from backend.data_settings.database import *
+from api_service.data_settings.database import *
 
 
 def get_session():
