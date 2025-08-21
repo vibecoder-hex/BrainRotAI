@@ -26,3 +26,12 @@ class PromptForm(forms.Form):
 class LoginForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput(attrs={"id": "login_input"}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={"id": "password_input"}))
+
+
+class RegistrationForm(forms.Form):
+    username = forms.CharField(widget=forms.TextInput(attrs={"id": "username_input"}))
+    fullname = forms.CharField(widget=forms.TextInput(attrs={"id": "fullname_input"}))
+    email = forms.CharField(widget=forms.TextInput(attrs={'id': "email_input"}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={"id": "password_input"}))
+    repeat_password = forms.CharField(widget=forms.PasswordInput(attrs={"id": "repeat_password"}))
+

@@ -1,6 +1,6 @@
-from django.shortcuts import render
-import aiohttp
-from .forms import PromptForm, LoginForm
+from django.shortcuts import render, redirect
+import requests
+from .forms import PromptForm, LoginForm, RegistrationForm
 
 async def index(request):
     form = PromptForm()
@@ -10,11 +10,20 @@ def login(request):
     form = LoginForm()
     return render(request, 'login.html', {"form": form})
 
-async def about_user(request):
-    async with aiohttp.ClientSession() as session:
-        async with session.get("http://127.0.0.1:8001/api/users/me", cookies={"access_token": request.COOKIES.get("access_token")}) as response:
-            if response.status == 200:
+def about_user(request):
+    access_token = request.COOKIES.get("access_token")
+    if access_token:
+        try:
+            responce = requests.get("http://127.0.0.1:8001/api/users/me", cookies={"access_token": access_token})
+            if responce.status_code == 200:
                 return render(request, "about_user.html")
             else:
-                return render(request, "login.html")
-    
+                return redirect("brainrotapp:login")
+        except requests.exceptions.RequestException:
+            return redirect("brainrotapp:login")
+    else:
+        return redirect("brainrotapp:login")
+
+def register(request):
+    form = RegistrationForm()
+    return render(request, "registration.html", {"form": form})

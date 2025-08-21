@@ -10,7 +10,8 @@
             <a href="{% url "brainrotapp:about_user" %}">About User</a><br>
             <button onclick="logout()">Logout</button>
         {% else %}
-            <a href="{% url "brainrotapp:login" %}">Auth</a>
+            <a href="{% url "brainrotapp:login" %}">Login</a>
+            <a href="{% url "brainrotapp:register" %}">Registration</a>
         {% endif %}
         {% block body %}{% endblock %}
     </body>
