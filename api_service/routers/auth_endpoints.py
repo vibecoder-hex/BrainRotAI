@@ -31,7 +31,7 @@ async def login(response: Response, form_data: Annotated[OAuth2PasswordRequestFo
     return {"message": "Login successfull"}
 
 
-@router.post('/api/logout/')
+@router.get('/api/logout/')
 async def logout(response: Response):
     response.delete_cookie("access_token")
     return {"message": "logout successfull"}

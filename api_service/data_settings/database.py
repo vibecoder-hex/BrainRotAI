@@ -16,7 +16,6 @@ class UserBase(AbstractUser, table=True):
     disabled: bool = Field(index=True, default=False)
 
 
-
 def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
 

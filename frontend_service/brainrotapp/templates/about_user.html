@@ -1,9 +1,8 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
 
-<html>
-    <head>
-        <title>About User</title>
-    </head>
+{% block title %}About user{% endblock %}
+
+{% block body %}
     <body>
         <h1>About User</h1>
     </body>
@@ -23,7 +22,6 @@
         }
         document.body.append(userdata_list)
         }
-
         getUserData();
     </script>
-</html>
+{% endblock %}

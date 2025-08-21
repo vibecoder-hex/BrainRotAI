@@ -59,8 +59,8 @@
             }
             catch (error) {
                 if (error.status === 401) {
-                    window.location.href = 'login/'
-                }   
+                    window.location.href = "{% url "brainrotapp:login" %}"
+                }
             }
             finally {
                 button_change(submit_btn, "done");
@@ -69,15 +69,6 @@
         
         const clear_result = function() {
             document.getElementById("result_image").innerHTML = "";
-        }
-
-
-        const logout = async () => {
-            await fetch("http://127.0.0.1:8001/api/logout/", {
-                method: "POST",
-                credentials: 'include',
-            })
-            window.location.href = "{% url "brainrotapp:login" %}"
         }
     </script>
 {% endblock %}   
