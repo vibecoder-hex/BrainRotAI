@@ -6,7 +6,6 @@ from api_service.auth_settings.jwt_auth import *
 
 router = APIRouter()
 
-@router.get('/api/about_user')
-def about_user(current_user: Annotated[UserBase, Depends(get_current_active_user)], request: Request):
-
-    return {"user": current_user, "token": request.cookies.get("access_token")}
+@router.get('/api/users/me', response_model=AbstractUser)
+def about_user(current_user: Annotated[UserBase, Depends(get_current_active_user)]):
+    return current_user

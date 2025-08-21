@@ -1,4 +1,15 @@
-let form_for_login = document.getElementById("login_form")
+{% extends "base.html" %}
+{% load static %}
+
+{% block body %}
+        <h1>Login</h1>
+        <form method="post" id="login_form">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit" id="submit_btn">Login</button>
+        </form>
+        <script>
+            let form_for_login = document.getElementById("login_form")
             form_for_login.onsubmit = async (e) => {
                 e.preventDefault();
 
@@ -29,7 +40,7 @@ let form_for_login = document.getElementById("login_form")
                     }
                     let token_response = await response.json()
                     localStorage.setItem("token", token_response.access_token)
-                    window.location.href = '/'
+                    window.location.href = "{% url 'brainrotapp:index' %}";
                 }
                 catch (error) {
                     document.getElementById("status_div").innerHTML = `
@@ -37,3 +48,5 @@ let form_for_login = document.getElementById("login_form")
                     `;
                 }
             }
+        </script>
+{% endblock %}

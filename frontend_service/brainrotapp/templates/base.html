@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+    </head>
+    <body>
+        <h1>BrainRotAI</h1> 
+        {% if is_auth %}
+            <a href="{% url "brainrotapp:about_user" %}">About User</a><br>
+            <button onclick="logout()">Logout</button>
+        {% else %}
+            <a href="{% url "brainrotapp:login" %}">Auth</a>
+        {% endif %}
+        {% block body %}{% endblock %}
+    </body>
+</html>

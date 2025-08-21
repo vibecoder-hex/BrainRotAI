@@ -28,15 +28,12 @@ def authenticate_user(db, username: str, password: str, session: SessionDep):
     return user
 
 def get_token_from_cookie(request: Request):
-    print(f"All cookies received: {dict(request.cookies)}")
-    print(f"All headers: {dict(request.headers)}")
     token = request.cookies.get("access_token")
     if not token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Not token found"
         )
-    print(token)
     return token
 
 # Генерация JWT-токена c довалением срока действия
@@ -54,8 +51,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 async def get_current_user(token: Annotated[str, Depends(get_token_from_cookie)], session: SessionDep):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail = "Could not validate credentials",
-        headers = {"WWW-Authenticate": "Bearer"}
+        detail = "Could not validate credentials"
     )
     try:
         payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[ALGORITHM])

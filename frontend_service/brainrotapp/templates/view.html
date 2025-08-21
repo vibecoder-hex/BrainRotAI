@@ -1,4 +1,17 @@
-const button_change = function(btn, state) {
+{% extends "base.html" %}
+{% load static %}
+
+{% block body %}
+    <h3>Generate image from prompt</h3>
+    <form id="prompt_form" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit" id="submit_btn">Generate</button>
+    </form>
+    <br>
+    <div id="result_image"></div>
+    <script>
+        const button_change = function(btn, state) {
             switch (state) {
                 case "loading":
                     btn.disabled = true;
@@ -21,8 +34,7 @@ const button_change = function(btn, state) {
             e.preventDefault();
 
             button_change(submit_btn, "loading");
-            
-            const token = localStorage.getItem("token")
+        
             const prompt_text = document.getElementById("prompt_input").value;
             const image_ratio = document.getElementById("image_ratio").value;
 
@@ -31,8 +43,7 @@ const button_change = function(btn, state) {
                     method: 'POST',
                     credentials: 'include',
                     headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
+                        "Content-Type": "application/json"
                     },
                     body: JSON.stringify({"prompt": prompt_text, "image_ratio": image_ratio.split(":")}),
                 });
@@ -61,10 +72,12 @@ const button_change = function(btn, state) {
         }
 
 
-const logout = async () => {
-    await fetch("http://127.0.0.1:8001/api/logout/", {
-        method: "POST",
-        credentials: 'include',
-    })
-    window.location.href = "login/"
-}
+        const logout = async () => {
+            await fetch("http://127.0.0.1:8001/api/logout/", {
+                method: "POST",
+                credentials: 'include',
+            })
+            window.location.href = "{% url "brainrotapp:login" %}"
+        }
+    </script>
+{% endblock %}   

@@ -16,8 +16,7 @@ async def login(response: Response, form_data: Annotated[OAuth2PasswordRequestFo
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,                            # Аутентификация и генерация токена с заданным временем истечения
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"}
+            detail="Incorrect username or password"
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(data={"sub": user.username}, expires_delta=access_token_expires)
