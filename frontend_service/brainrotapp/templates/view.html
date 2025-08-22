@@ -10,7 +10,15 @@
     </form>
     <br>
     <div id="result_image"></div>
+    {% if is_auth %}
+        <div id="generated_images"></div>
+    {% else %}
+        <h3>Please, authorize to the service</h3>
+    {% endif %}
     <script>
+        const generate_form = document.getElementById("prompt_form");
+        const submit_btn = document.getElementById("submit_btn");
+
         const button_change = function(btn, state) {
             switch (state) {
                 case "loading":
@@ -25,9 +33,6 @@
                     break;
             }
         }
-        
-        const generate_form = document.getElementById("prompt_form");
-        const submit_btn = document.getElementById("submit_btn");
 
         generate_form.onsubmit = async (e) => {
 
@@ -47,15 +52,20 @@
                     },
                     body: JSON.stringify({"prompt": prompt_text, "image_ratio": image_ratio.split(":")}),
                 });
+
                 if (!response.ok) {
                     throw {"status": response.status}
                 }
+
                 const response_result = await response.json()
                 document.getElementById("result_image").innerHTML = `
                 <img src="data:image/png;base64,${response_result.result}" width="500"/>
                 <br>
                 <button type="submit" id="clear_button" onclick="clear_result()">Clear</button>
                 `
+                viewGeneratedImages(`data:image/png;base64,${response_result.result}`, prompt_text);
+                document.getElementById("generated_images").append(imageElement);
+
             }
             catch (error) {
                 if (error.status === 401) {
@@ -69,6 +79,47 @@
         
         const clear_result = function() {
             document.getElementById("result_image").innerHTML = "";
+        }
+
+        const get_images = async () => {
+            const response = await fetch("http://127.0.0.1:8001/api/get_images/", {
+                method: "GET",
+                credentials: 'include'
+            });
+            const result = await response.json();
+            const data = result.result;
+            const imageArray = data.image;
+            for (const imageObject of imageArray) {
+                viewGeneratedImages(imageObject.image_url, imageObject.prompt);
+            }    
+        }
+        get_images();
+
+        const viewGeneratedImages = function(imageSrc, prompt) {
+            const imageElement = document.createElement("div");
+            imageElement.innerHTML = `
+            ${prompt}<br>
+            <img src="${imageSrc}" width="200"/>
+            `
+            document.getElementById("generated_images").append(imageElement);
+        }
+
+        const deleteImage = async(image_id) => {
+            try {
+                await fetch(`http://127.0.0.1:8001/api/delete_image/${image_id}`, {
+                    method: "DELETE",
+                    credentials: 'include'
+                })
+                if (!response.ok) {
+                    throw {"status": response.status}
+                }
+                document.getElementById(image_id).remove();
+            }
+            catch (error) {
+                if (error.status === 401) {
+                    window.location.href = "{% url "brainrotapp:login" %}"
+                }
+            }
         }
     </script>
 {% endblock %}   

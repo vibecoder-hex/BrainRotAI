@@ -2,7 +2,8 @@ from generation_model.yandex_art_api import generate
 from fastapi import APIRouter
 from typing import Annotated
 from datetime import datetime
-from collections import defaultdict
+
+from sqlalchemy.exc import NoResultFound
 
 from api_service.data_settings.database import *
 from api_service.auth_settings.jwt_auth import *
@@ -24,12 +25,27 @@ async def generate_image(request: PromptRequest, current_user: Annotated[UserBas
     return {"result": image_code}
 
 @router.get("/api/get_images/")
-async def get_images(session: SessionDep):
+async def get_images(session: SessionDep, current_user: Annotated[UserBase, Depends(get_current_active_user)]):
     statement = select(Image, UserBase).where(Image.user == UserBase.id)
     results = session.exec(statement)
-    result = defaultdict(dict)
+    result = {"image": [], "user": {}}
     for image, user in results:
-        result["image"]["prompt"] = image.prompt
-        result["image"]["publish"] = image.publish
+        result["image"].append({"image_id": image.id,
+                                "prompt": image.prompt,
+                                "image_url": image.image,
+                                "publish": image.publish
+                                })
         result["user"]["username"] = user.username
     return {"result": result}
+
+@router.delete("/api/delete_image/{image_id}/")
+async def delete_image(image_id: int, session: SessionDep, current_user: Annotated[UserBase, Depends(get_current_active_user)]):
+    statement = select(Image).where(Image.id == image_id)
+    try:
+        result = session.exec(statement).one()
+        session.delete(result)
+        session.commit()
+    except NoResultFound:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            detail="Not found in database")
+    return {"message": "Delete Successfull"}
