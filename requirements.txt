@@ -5,3 +5,8 @@ aiohttp
 asyncio
 python-decouple
 bcrypt
+django
+sqlmodel
+alembic
+psycopg
+boto3

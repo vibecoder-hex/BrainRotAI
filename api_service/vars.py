@@ -11,5 +11,5 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated="auto")
 
 # Параметры базы данных sqlite
-postgresql_url = f"""postgresql://{decouple.config("DB_NAME")}:{decouple.config("DB_PASSWORD")}@localhost:5432/brainrot_db"""
+postgresql_url = f"""postgresql://{decouple.config("DB_USER")}:{decouple.config("DB_PASSWORD")}@localhost:5432/brainrot_db"""
 engine = create_engine(postgresql_url)

@@ -7,6 +7,7 @@
             {% csrf_token %}
             {{ form }}
             <button type="submit" id="submit_btn">Login</button>
+        <div id="status_div"></div>
         </form>
         <script>
             let form_for_login = document.getElementById("login_form")
@@ -31,11 +32,11 @@
                     if (!response.ok) {
                         switch (response.status) {
                             case 401:
-                                throw new Error("Incorrect username/pasword");
+                                throw {"message": "Incorrect username/pasword"};
                             case 500:
-                                throw new Error("Internal server error")
+                                throw {"message": "Internal server error"}
                             default:
-                                throw new Error(`Error with code: ${response.status}`)
+                                throw {"message": `Error with code: ${response.status}`}
                         }
                     }
                     let token_response = await response.json()
