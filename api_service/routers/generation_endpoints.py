@@ -9,7 +9,7 @@ from sqlalchemy.exc import NoResultFound
 
 from api_service.data_settings.database import *
 from api_service.auth_settings.jwt_auth import *
-from api_service.data_settings.object_storage import ImageStorage
+from ..vars import image_storage
 
 router = APIRouter()
 
@@ -23,12 +23,6 @@ async def root():
 async def generate_image(request: PromptRequest, current_user: Annotated[UserBase, Depends(get_current_active_user)], session: SessionDep):
     image_code = await generate(text=request.prompt, image_ratio=request.image_ratio)
 
-    image_storage = ImageStorage("http://192.168.0.108:9000",
-                                 config("AWS_ACCESS_KEY_ID"),
-                                 config("AWS_SECRET_ACCESS_KEY"),
-                                 config("AWS_BUCKET_NAME"),
-                                 'png'
-                    )
     alph = "qwertyuiopasdfghjklzxcvbnm1234567890"
     random_filename = 'image_' + ''.join([choice(alph) for _ in range(30)]) + '.png'
     image_filepath = f'images/{random_filename}'
@@ -38,17 +32,17 @@ async def generate_image(request: PromptRequest, current_user: Annotated[UserBas
     session.add(image_to_base)
     session.commit()
 
-    return {"result": image_code}
+    return {"db_id": image_to_base.id}
 
 @router.get("/api/get_images/")
 async def get_images(session: SessionDep, current_user: Annotated[UserBase, Depends(get_current_active_user)]):
     statement = select(Image, UserBase).where(Image.user == UserBase.id)
-    results = session.exec(statement)
+    data = session.exec(statement)
     result = {"image": [], "user": {}}
-    for image, user in results:
+    for image, user in data:
         result["image"].append({"image_id": image.id,
                                 "prompt": image.prompt,
-                                "image_url": image.image,
+                                "image_url": image_storage.get_image_object(image.image),
                                 "publish": image.publish
                                 })
         result["user"]["username"] = user.username
@@ -56,12 +50,31 @@ async def get_images(session: SessionDep, current_user: Annotated[UserBase, Depe
 
 @router.delete("/api/delete_image/{image_id}/")
 async def delete_image(image_id: int, session: SessionDep, current_user: Annotated[UserBase, Depends(get_current_active_user)]):
-    statement = select(Image).where(Image.id == image_id)
+    statement = select(Image, UserBase).where(Image.id == image_id).where(Image.user == UserBase.id)
     try:
-        result = session.exec(statement).one()
-        session.delete(result)
+        data = session.exec(statement).one()
+        image = data[0]
+        session.delete(image)
+        image_storage.delete_image_object(image.image)
         session.commit()
     except NoResultFound:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Not found in database")
     return {"message": "Delete Successfull"}
+
+@router.get('/api/get_current_image/{image_id}')
+async def get_current_image(image_id: int, session: SessionDep, current_user: Annotated[UserBase, Depends(get_current_active_user)]):
+    statement = select(Image, UserBase).where(Image.id == image_id).where(Image.user == UserBase.id)
+    try:
+        data = session.exec(statement).one()
+    except NoResultFound:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="No found in database")
+    image, user = data
+    result = {"prompt": image.prompt,
+              "image_url": image_storage.get_image_object(image.image),
+              "publish": image.publish,
+              "user": user.username
+            }
+    
+    return  {"result": result}

@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 import requests
 from .forms import PromptForm, LoginForm, RegistrationForm
+from .check_auth import is_authenticate
 
-async def index(request):
+def index(request):
     form = PromptForm()
     return render(request, "view.html", {"form": form})
 
@@ -12,17 +13,10 @@ def login(request):
 
 def about_user(request):
     access_token = request.COOKIES.get("access_token")
-    if access_token:
-        try:
-            responce = requests.get("http://127.0.0.1:8001/api/users/me", cookies={"access_token": access_token})
-            if responce.status_code == 200:
-                return render(request, "about_user.html")
-            else:
-                return redirect("brainrotapp:login")
-        except requests.exceptions.RequestException:
-            return redirect("brainrotapp:login")
-    else:
-        return redirect("brainrotapp:login")
+    if not is_authenticate(access_token):
+        return redirect('brainrotapp:login')
+    return render(request, 'about_user.html')
+    
 
 def register(request):
     form = RegistrationForm()

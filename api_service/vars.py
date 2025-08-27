@@ -2,6 +2,8 @@ import decouple
 from passlib.context import CryptContext
 from sqlmodel import create_engine
 
+from api_service.data_settings.object_storage import ImageStorage
+
 # JWT константы
 JWT_SECRET_KEY = decouple.config("JWT_SECRET_KEY")
 ALGORITHM = "HS256"
@@ -13,3 +15,10 @@ pwd_context = CryptContext(schemes=['bcrypt'], deprecated="auto")
 # Параметры базы данных sqlite
 postgresql_url = f"""postgresql://{decouple.config("DB_USER")}:{decouple.config("DB_PASSWORD")}@localhost:5432/brainrot_db"""
 engine = create_engine(postgresql_url)
+
+image_storage = ImageStorage("http://192.168.0.107:9000",
+                                 decouple.config("AWS_ACCESS_KEY_ID"),
+                                 decouple.config("AWS_SECRET_ACCESS_KEY"),
+                                 decouple.config("AWS_BUCKET_NAME"),
+                                 'png'
+                    )

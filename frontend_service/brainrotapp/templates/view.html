@@ -10,6 +10,7 @@
     </form>
     <br>
     <div id="result_image"></div>
+    <div id="selected_image"></div>
     {% if is_auth %}
         <div id="generated_images"></div>
     {% else %}
@@ -32,6 +33,25 @@
                     btn.innerHTML = "Generate";
                     break;
             }
+        }
+
+        const getCurrentImage = async (image_id) => {
+            const response = await fetch(`http://127.0.0.1:8001/api/get_current_image/${image_id}`, {
+                method: 'GET',
+                credentials: 'include'
+            });
+            const result = await response.json();
+            return result.result;
+        }
+
+
+        const viewGeneratedImage = function(imageSrc, prompt, image_id) {
+            const imageElement = document.createElement("div");
+            imageElement.id = String(image_id);
+            imageElement.innerHTML = `
+            <img src="${imageSrc}" width="200" onclick="viewSelectedImage(${image_id})"/>
+            `;
+            document.getElementById("generated_images").append(imageElement);
         }
 
         generate_form.onsubmit = async (e) => {
@@ -57,15 +77,17 @@
                     throw {"status": response.status}
                 }
 
-                const response_result = await response.json()
+                const responseResult = await response.json()
+                const imageId = responseResult.db_id;
+                
+                const currentImage = await getCurrentImage(imageId);
                 document.getElementById("result_image").innerHTML = `
-                <img src="data:image/png;base64,${response_result.result}" width="500"/>
+                <img src="${currentImage.image_url}" width="500"/>
                 <br>
-                <button type="submit" id="clear_button" onclick="clear_result()">Clear</button>
+                <button onclick="clear_result()">Clear</button>
+                <button id="delete_button" onclick="deleteImage(${image_id})">Delete</button>
                 `
-                viewGeneratedImages(`data:image/png;base64,${response_result.result}`, prompt_text);
-                document.getElementById("generated_images").append(imageElement);
-
+                viewGeneratedImage(currentImage.image_url, prompt_text, imageId);
             }
             catch (error) {
                 if (error.status === 401) {
@@ -81,7 +103,7 @@
             document.getElementById("result_image").innerHTML = "";
         }
 
-        const get_images = async () => {
+        const getImages = async () => {
             const response = await fetch("http://127.0.0.1:8001/api/get_images/", {
                 method: "GET",
                 credentials: 'include'
@@ -90,19 +112,10 @@
             const data = result.result;
             const imageArray = data.image;
             for (const imageObject of imageArray) {
-                viewGeneratedImages(imageObject.image_url, imageObject.prompt);
+                viewGeneratedImage(imageObject.image_url, imageObject.prompt, imageObject.image_id);
             }    
         }
-        get_images();
-
-        const viewGeneratedImages = function(imageSrc, prompt) {
-            const imageElement = document.createElement("div");
-            imageElement.innerHTML = `
-            ${prompt}<br>
-            <img src="${imageSrc}" width="200"/>
-            `
-            document.getElementById("generated_images").append(imageElement);
-        }
+        getImages();
 
         const deleteImage = async(image_id) => {
             try {
@@ -113,13 +126,30 @@
                 if (!response.ok) {
                     throw {"status": response.status}
                 }
-                document.getElementById(image_id).remove();
             }
             catch (error) {
                 if (error.status === 401) {
                     window.location.href = "{% url "brainrotapp:login" %}"
                 }
             }
+            document.getElementById(image_id).remove();
+            clear_result();
+        }
+
+        const viewSelectedImage = function(image_id) {
+            document.getElementById("result_image").innerHTML = "";
+            getCurrentImage(image_id)
+            .then(
+                currentImage => {
+                    const selectedImage = document.getElementById("result_image");
+                    selectedImage.innerHTML = `
+                        <h3>${currentImage.prompt}</h3><br>
+                        <img src="${currentImage.image_url}" width="500"/><br>
+                        <button id="delete_button" onclick="deleteImage(${image_id})">Delete</button>
+                        <button onclick="clear_result()">Clear</button>
+                    `;
+                }
+            );
         }
     </script>
 {% endblock %}   
