@@ -5,8 +5,7 @@ aiohttp
 asyncio
 python-decouple
 bcrypt
-django
 sqlmodel
 alembic
-psycopg
+psycopg2-binary
 boto3
