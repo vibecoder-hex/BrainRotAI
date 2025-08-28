@@ -45,7 +45,7 @@
         }
 
 
-        const viewGeneratedImage = function(imageSrc, prompt, image_id) {
+        const viewGeneratedImage = function(imageSrc, image_id) {
             const imageElement = document.createElement("div");
             imageElement.id = String(image_id);
             imageElement.innerHTML = `
@@ -84,10 +84,10 @@
                 document.getElementById("result_image").innerHTML = `
                 <img src="${currentImage.image_url}" width="500"/>
                 <br>
-                <button onclick="clear_result()">Clear</button>
-                <button id="delete_button" onclick="deleteImage(${image_id})">Delete</button>
-                `
-                viewGeneratedImage(currentImage.image_url, prompt_text, imageId);
+                <button onclick=clear_result()>Сlose</button>
+                <button onclick=deleteImage(${image_id})>Delete</button>
+                `;
+                viewGeneratedImage(currentImage.image_url, imageId);
             }
             catch (error) {
                 if (error.status === 401) {
@@ -112,7 +112,7 @@
             const data = result.result;
             const imageArray = data.image;
             for (const imageObject of imageArray) {
-                viewGeneratedImage(imageObject.image_url, imageObject.prompt, imageObject.image_id);
+                viewGeneratedImage(imageObject.image_url, imageObject.image_id);
             }    
         }
         getImages();
@@ -145,8 +145,8 @@
                     selectedImage.innerHTML = `
                         <h3>${currentImage.prompt}</h3><br>
                         <img src="${currentImage.image_url}" width="500"/><br>
-                        <button id="delete_button" onclick="deleteImage(${image_id})">Delete</button>
-                        <button onclick="clear_result()">Clear</button>
+                        <button onclick=clear_result()>Сlose</button>
+                        <button onclick=deleteImage(${image_id})>Delete</button>
                     `;
                 }
             );

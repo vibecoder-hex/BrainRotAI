@@ -13,10 +13,10 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated="auto")
 
 # Параметры базы данных sqlite
-postgresql_url = f"""postgresql://{decouple.config("DB_USER")}:{decouple.config("DB_PASSWORD")}@localhost:5432/brainrot_db"""
+postgresql_url = f"""postgresql://{decouple.config("DB_USER")}:{decouple.config("DB_PASSWORD")}@localhost:5432/brainrotdb"""
 engine = create_engine(postgresql_url)
 
-image_storage = ImageStorage("http://192.168.0.107:9000",
+image_storage = ImageStorage("http://127.0.0.1:9000/",
                                  decouple.config("AWS_ACCESS_KEY_ID"),
                                  decouple.config("AWS_SECRET_ACCESS_KEY"),
                                  decouple.config("AWS_BUCKET_NAME"),
