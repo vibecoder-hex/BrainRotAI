@@ -2,7 +2,10 @@ import decouple
 from passlib.context import CryptContext
 from sqlmodel import create_engine
 
-from .data_settings.object_storage import ImageStorage
+try:
+    from .data_settings.object_storage import ImageStorage
+except ImportError:
+    from data_settings.object_storage import ImageStorage
 
 # JWT константы
 JWT_SECRET_KEY = decouple.config("JWT_SECRET_KEY")

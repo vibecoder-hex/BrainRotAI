@@ -1,5 +1,8 @@
 from sqlmodel import Field, SQLModel
-from ..vars import engine
+try:
+    from ..vars import engine
+except ImportError:
+    from vars import engine
 
 class AbstractUser(SQLModel):
     username: str
