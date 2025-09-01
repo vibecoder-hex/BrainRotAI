@@ -18,7 +18,8 @@ def authorize_user(user, response):
             httponly=True,
             max_age=30 * 60,
             secure=True,
-            domain='vibecoder-hex-brainrotai-6cd6.twc1.net'
+            domain='vibecoder-hex-brainrotai-6cd6.twc1.net',
+            samesite="none"
     )
     
 @router.post("/api/token/")
