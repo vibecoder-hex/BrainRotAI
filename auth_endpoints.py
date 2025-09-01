@@ -18,7 +18,8 @@ def authorize_user(user, response):
             httponly=True,
             max_age=30 * 60,
             secure=True,
-            samesite="none"
+            samesite="none",
+            path="/"
     )
     
 @router.post("/api/token/")
