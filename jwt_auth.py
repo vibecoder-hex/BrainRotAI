@@ -5,16 +5,10 @@ from typing import Annotated
 from jwt.exceptions import InvalidTokenError
 
 import jwt
-try:
-    from ..data_settings.database import *
-    from ..data_settings.series import *
-    from ..data_settings.db_session import *
-    from ..vars import *
-except ImportError:
-    from data_settings.database import *
-    from data_settings.series import *
-    from data_settings.db_session import *
-    from vars import *
+from database import *
+from series import *
+from db_session import *
+from vars import *
 
 # Верификация пароля с его хешем
 def verify_password(plain_password, hashed_password): 

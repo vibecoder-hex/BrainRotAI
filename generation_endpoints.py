@@ -6,16 +6,10 @@ from random import choice
 
 from sqlalchemy.exc import NoResultFound
 
-try:
-    from ..generation_model.yandex_art_api import generate
-    from ..data_settings.database import *
-    from ..auth_settings.jwt_auth import *
-    from ..vars import image_storage
-except ImportError:
-    from generation_model.yandex_art_api import generate
-    from data_settings.database import *
-    from auth_settings.jwt_auth import *
-    from vars import image_storage
+from yandex_art_api import generate
+from database import *
+from jwt_auth import *
+from vars import image_storage
 
 router = APIRouter()
 

@@ -3,9 +3,9 @@ from typing import Annotated
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
-from ..data_settings.database import *
-from ..auth_settings.jwt_auth import *
-from ..vars import ACCESS_TOKEN_EXPIRE_MINUTES
+from database import *
+from jwt_auth import *
+from vars import ACCESS_TOKEN_EXPIRE_MINUTES
 
 router = APIRouter()
 

@@ -1,12 +1,8 @@
 from typing import Annotated
 from fastapi import Depends
 from sqlmodel import Session, select
-try:
-    from ..vars import engine
-    from ..data_settings.database import *
-except ImportError:
-    from vars import engine
-    from data_settings.database import *
+from vars import engine
+from database import *
 
 
 def get_session():

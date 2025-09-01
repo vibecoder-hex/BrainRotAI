@@ -1,16 +1,10 @@
 from fastapi import FastAPI
 
 from fastapi.middleware.cors import CORSMiddleware
-try:
-    from .routers.auth_endpoints import router as auth_router
-    from .routers.generation_endpoints import router as generation_router
-    from .routers.user_data_endpoints import router as user_data_router
-    from .data_settings.database import create_db_and_tables
-except ImportError:
-    from routers.auth_endpoints import router as auth_router
-    from routers.generation_endpoints import router as generation_router
-    from routers.user_data_endpoints import router as user_data_router
-    from data_settings.database import create_db_and_tables
+from auth_endpoints import router as auth_router
+from generation_endpoints import router as generation_router
+from user_data_endpoints import router as user_data_router
+from database import create_db_and_tables
 
 app = FastAPI()
 

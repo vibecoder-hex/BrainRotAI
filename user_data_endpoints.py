@@ -1,12 +1,8 @@
 from fastapi import APIRouter
 from typing import Annotated
 
-try:
-    from ..data_settings.database import *
-    from ..auth_settings.jwt_auth import *
-except ImportError:
-    from data_settings.database import *
-    from auth_settings.jwt_auth import *
+from database import *
+from jwt_auth import *
 
 router = APIRouter()
 
